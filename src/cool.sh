@@ -17,7 +17,7 @@ fi
 cleanup() {
     if [ -f "${BASENAME}.s" ]; then
         rm "${BASENAME}.s"
-        echo "[Deleted ${BASENAME}.s]"
+        echo "[ Deleted ${BASENAME}.s ]"
     fi
 }
 trap cleanup EXIT
@@ -25,7 +25,7 @@ trap cleanup EXIT
 # Compile with coolc
 coolc "$FILENAME"
 if [ $? -ne 0 ]; then
-    echo "Compilation failed :("
+    echo "[ Compilation failed :( ]"
     exit 1
 fi
 

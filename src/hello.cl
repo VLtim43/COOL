@@ -1,5 +1,11 @@
-class Main inherits IO {
-   main(): SELF_TYPE {
-	out_string("Hello, World edited.\n")
-   };
+class Main  {
+    io : IO <- new IO;
+    x : String <- "Hello world\n";
+
+    main(): Bool {
+        {
+            io.out_string(x);
+            true;
+        }
+    };
 };
