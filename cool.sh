@@ -1,19 +1,23 @@
 #!/bin/bash
 
-if [ $# -ne 1 ]; then
-    echo "Usage: cool <file.cl>"
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <filename>"
     exit 1
 fi
 
-INPUT_FILE="$1"
-OUTPUT_FILE="${INPUT_FILE%.cl}.s"
+FILENAME="$1"
+BASENAME="${FILENAME%.*}"
+
+if [ -f "${BASENAME}.s" ]; then
+    rm "${BASENAME}.s"
+fi
 
 # Compile with coolc
-/var/temp/cool/bin/coolc "$INPUT_FILE"
+coolc "$FILENAME"
 if [ $? -ne 0 ]; then
-    echo "Error on compilation"
+    echo "Compilation failed."
     exit 1
 fi
 
 # Run with spim
-/var/temp/cool/bin/spim -file "$OUTPUT_FILE"
+spim -file "${BASENAME}.s"
