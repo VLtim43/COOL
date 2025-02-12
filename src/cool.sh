@@ -8,14 +8,24 @@ fi
 FILENAME="$1"
 BASENAME="${FILENAME%.*}"
 
+# Remove existing .s file if it exists
 if [ -f "${BASENAME}.s" ]; then
     rm "${BASENAME}.s"
 fi
 
+# Ensure cleanup on script exit
+cleanup() {
+    if [ -f "${BASENAME}.s" ]; then
+        rm "${BASENAME}.s"
+        echo "[Deleted ${BASENAME}.s]"
+    fi
+}
+trap cleanup EXIT
+
 # Compile with coolc
 coolc "$FILENAME"
 if [ $? -ne 0 ]; then
-    echo "Compilation failed."
+    echo "Compilation failed :("
     exit 1
 fi
 
