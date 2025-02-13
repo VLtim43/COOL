@@ -5,7 +5,7 @@ class Main  {
     main(): Bool {
         {
             io.out_string(x);
-            true;
+            true; 
         }
     };
 };
