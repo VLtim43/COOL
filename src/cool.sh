@@ -17,7 +17,7 @@ fi
 cleanup() {
     if [ -f "${BASENAME}.s" ]; then
         rm "${BASENAME}.s"
-        echo "[ Deleted ${BASENAME}.s ]"
+        # echo "[ Deleted ${BASENAME}.s ]"
     fi
 }
 trap cleanup EXIT

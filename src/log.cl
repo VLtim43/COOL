@@ -17,7 +17,7 @@ class Console {
 
     input() : String {
         {
-            io.in_string();
+          io.in_string();
         }
     };
  
