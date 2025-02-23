@@ -1,5 +1,43 @@
+class Node inherits IO {
+   value : String <- "_";
+   nextNode : Node;
+
+   init(val: String): Node {
+     {
+      value <- val;
+      nextNode <- new Node; 
+      self;
+     }
+   };   
+
+
+   getValue() : String {
+      {
+         value;
+      }
+   };
+
+   getNext() : Node {
+      {
+         nextNode;
+      }
+   };
+};
+
+
+class List {
+   head : Node;
+
+   init() : Node {
+      
+   }
+
+
+}
+
+
+
 class Console inherits IO {
-   input : String;
 
    log(arg: String) : Object {
       {
@@ -10,25 +48,45 @@ class Console inherits IO {
    enter() : String {
       {
          out_string(">");
-         input <- in_string();
-         input;
+         in_string();
       }
    };
    
 };
-
-
-
 
 class Main {
    
    console : Console <- new Console;
    input : String;
 
-   main() : Object {
+   -- main() : Bool {
+   --    {
+   --       (let continue : Bool <- true in 
+   --          {
+   --             while continue loop {
+   --                input <- console.enter();
+
+   --                if input = "x" then
+   --                   {
+   --                      console.log("[END_OF_PROGRAM]");
+   --                      continue <- false;
+   --                   } 
+   --                else
+   --                   console.log("KEEP")
+   --                fi;
+   --             } pool; 
+   --          }
+   --       );
+   --    true; 
+   --    } 
+   -- };
+
+   node : Node <- new Node;
+
+   main() : Bool {
       {
-         input <- console.enter();
-         console.log(input); 
+       
+         true;
       }
    };
 
