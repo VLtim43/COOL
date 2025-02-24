@@ -73,10 +73,18 @@ class Node inherits IO {
 
 -- implements a "list" that is an array of strings
 class List {
+   console : Console <- new Console;
+
    head : Node <- new Node; -- we initialize the List with both a head as a "ghost" Node
    size : Int <- 1;
 
    oldHead : Node;
+   swapNode: Node;
+
+   nodeToSwapA: Node;
+   nodeToSwapB: Node;
+
+
 
    init() : List {
       {
@@ -87,18 +95,17 @@ class List {
 
    };
 
-
    push(value: String) : List {
       {
         (let newNode : Node <- new Node  in
             {  
-               head.setAsHead(false);
-               oldHead <- head;
-               head <- newNode.init(value).setAsHead(true);
+               head.setAsHead(false); -- former head no longer is set as head
+               oldHead <- head; 
+               head <- newNode.init(value).setAsHead(true); -- new Node is now the head
 
-               head.setNext(oldHead);
+               head.setNext(oldHead); 
 
-               size <- size + 1;
+               size <- size + 1; 
             }
         ); 
         self;
@@ -106,6 +113,22 @@ class List {
    };
 
 
+   swap() : Bool {
+      {
+         nodeToSwapA <- node;
+         nodeToSwapB <- node.getNext();
+
+
+         nodeToSwapA.setNext(swapNode);
+
+         swapNode.setNext(nodeToSwapB.getNext());
+
+         nodeToSwapB.setNext(nodeToSwapA);
+         nodeToSwapA.setNext(swapNode.getNext());
+
+        true;
+      }
+   };
 
    getHead() : Node {
       {
@@ -119,7 +142,43 @@ class List {
       }
    };
 
+   print() : Bool {
+      {
+         (let nodeToPrint : Node <- head in 
+            {
+               while (not nodeToPrint.isTail()) loop {
+                  console.log(nodeToPrint.getValue());
+                  nodeToPrint <- nodeToPrint.getNext(); 
+               } pool;                    
+            }
+         );
+      true; 
+      } 
+   };
 
+
+   -- evaluate() : Bool {
+   --    {
+   --       if (head.getValue() = "s") then
+   --          {
+   --             -- head.setAsHead(false);
+   --             -- head.nextNode().setAsHead(true);
+   --             -- head.setNext(trashNode);
+   --             swap(head);
+   --          } 
+   --             else if (head.getValue() = "+") then
+   --          {
+   --             console.log("+");
+   --          }                   
+   --             else
+   --          {
+   --             console.log(">");
+   --          }
+   --          fi fi;
+   --       true;
+   --    }
+     
+   -- };
 };
 
 
@@ -161,46 +220,43 @@ class Console inherits IO {
 
 
 -- main
+
 class Main {
    
    console : Console <- new Console;
    input : String;
 
-   -- main() : Bool {
-   --    {
-   --       (let continue : Bool <- true in 
-   --          {
-   --             while continue loop {
-   --                input <- console.enter();
-
-   --                if input = "x" then
-   --                   {
-   --                      console.log("[END_OF_PROGRAM]");
-   --                      continue <- false;
-   --                   } 
-   --                else
-   --                   console.log("KEEP")
-   --                fi;
-   --             } pool; 
-   --          }
-   --       );
-   --    true; 
-   --    } 
-   -- };
-
    list : List <- new List;
 
    main() : Bool {
-      {  
-         
+      {
          list.init();
-         list.push("1").push("2").push("3").push("4").push("5");
+         (let continue : Bool <- true in 
+            {
+               while continue loop {
+                  input <- console.enter();
 
-
-         -- console.logInt(list.getSize());
-
-         true;
-      }
+                  if input = "x" then
+                     {
+                        continue <- false;
+                     } 
+                  else if input = "d" then
+                     {
+                        list.print();
+                     }
+                  else if input = "s" then
+                     {
+                        list.swap();
+                     }                     
+                  else
+                     {
+                        list.push(input);
+                     }
+                  fi fi fi;
+               } pool; 
+            }
+         );
+      true; 
+      } 
    };
-
 };
