@@ -23,7 +23,7 @@ cleanup() {
 trap cleanup EXIT
 
 # Compile with coolc
-coolc "$FILENAME"
+coolc "$FILENAME atoi.cl"
 if [ $? -ne 0 ]; then
     echo "[ Compilation failed :( ]"
     exit 1

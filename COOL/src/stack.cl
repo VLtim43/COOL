@@ -113,22 +113,22 @@ class List {
    };
 
 
-   swap() : Bool {
-      {
-         nodeToSwapA <- node;
-         nodeToSwapB <- node.getNext();
+   -- swap() : Bool {
+   --    {
+   --       nodeToSwapA <- node;
+   --       nodeToSwapB <- node.getNext();
 
 
-         nodeToSwapA.setNext(swapNode);
+   --       nodeToSwapA.setNext(swapNode);
 
-         swapNode.setNext(nodeToSwapB.getNext());
+   --       swapNode.setNext(nodeToSwapB.getNext());
 
-         nodeToSwapB.setNext(nodeToSwapA);
-         nodeToSwapA.setNext(swapNode.getNext());
+   --       nodeToSwapB.setNext(nodeToSwapA);
+   --       nodeToSwapA.setNext(swapNode.getNext());
 
-        true;
-      }
-   };
+   --      true;
+   --    }
+   -- };
 
    getHead() : Node {
       {
@@ -220,7 +220,6 @@ class Console inherits IO {
 
 
 -- main
-
 class Main {
    
    console : Console <- new Console;
@@ -246,7 +245,7 @@ class Main {
                      }
                   else if input = "s" then
                      {
-                        list.swap();
+                        console.log("s");
                      }                     
                   else
                      {
