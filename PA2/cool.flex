@@ -35,15 +35,30 @@ NUMBER          [0-9]
 TYPEID          [A-Z]{ALPHANUMERIC}*
 OBJECTID        [a-z]{ALPHANUMERIC}*
 
+WHITESPACE  [ \f\r\t\v\n]+ 
+
 %%
+		/* ------------------------------- IDENTIFIERS AND OPERATORS  ------------------------------- */	
+			    
+{TYPEID}        {
+                    cool_yylval.symbol = stringtable.add_string(yytext);
+                    return (TYPEID);
+	            }
+{OBJECTID}      {
+                    cool_yylval.symbol = stringtable.add_string(yytext);
+                    return (OBJECTID);
+	            }
 
-{NUMBER}+ 		{ 
-    				cool_yylval.symbol = inttable.add_string(yytext);
-   					 return INT_CONST; 
-				}
+{NUMBER}+       { 
+                    cool_yylval.symbol = inttable.add_string(yytext);
+                    return INT_CONST; 
+                }
 
-\n				{ curr_lineno++; } /* We increase the line counter */
+		/* ------------------------------- MISC  ------------------------------- */		    
+
+{WHITESPACE}    {}        
+\n              { curr_lineno++; }
 .               { printf("unexpected char: %s\n", yytext); }
 
-
 %%
+

@@ -1,17 +1,5 @@
-12312312
-1231
-1
-
-
-123
-
-
-
-756785
-
-sfs325
-
-
-14f345
-
-
+class Main inherits IO {
+   main(): SELF_TYPE {
+	out_string("Hello, World.\n")
+   };
+};
