@@ -34,6 +34,9 @@ ALPHANUMERIC    [a-zA-Z0-9_]
 NUMBER          [0-9]
 TYPEID          [A-Z]{ALPHANUMERIC}*
 OBJECTID        [a-z]{ALPHANUMERIC}*
+DARROW          =>
+LE              <=
+ASSIGN          <-
 
 WHITESPACE  [ \f\r\t\v\n]+ 
 
@@ -53,6 +56,11 @@ WHITESPACE  [ \f\r\t\v\n]+
                     cool_yylval.symbol = inttable.add_string(yytext);
                     return INT_CONST; 
                 }
+
+
+{DARROW}		{   return DARROW; }
+{LE}            {   return LE; }
+{ASSIGN}        {   return ASSIGN; }
 
 		/* ------------------------------- MISC  ------------------------------- */		    
 
