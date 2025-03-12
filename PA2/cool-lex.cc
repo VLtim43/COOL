@@ -290,22 +290,22 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 2
-#define YY_END_OF_BUFFER 3
-static yyconst short int yy_accept[8] =
+#define YY_NUM_RULES 3
+#define YY_END_OF_BUFFER 4
+static yyconst short int yy_accept[9] =
     {   0,
-        0,    0,    3,    2,    2,    1,    0
+        0,    0,    4,    2,    3,    2,    1,    0
     } ;
 
 static yyconst int yy_ec[256] =
     {   0,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        2,    3,    1,    1,    1,    1,    1,    1,    1,    1,
+        3,    4,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -329,29 +329,31 @@ static yyconst int yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst int yy_meta[4] =
+static yyconst int yy_meta[5] =
     {   0,
-        1,    1,    2
+        1,    1,    1,    2
     } ;
 
 static yyconst short int yy_base[10] =
     {   0,
-        4,    3,    4,    7,    0,    7,    7,    0,    1
+        0,    0,    6,    7,    7,    0,    7,    7,    3
     } ;
 
 static yyconst short int yy_def[10] =
     {   0,
-        8,    8,    7,    7,    9,    7,    0,    7,    7
+        8,    1,    8,    8,    8,    9,    8,    0,    8
     } ;
 
-static yyconst short int yy_nxt[11] =
+static yyconst short int yy_nxt[12] =
     {   0,
-        4,    4,    6,    7,    5,    5,    3,    7,    7,    7
+        4,    5,    6,    4,    7,    8,    3,    8,    8,    8,
+        8
     } ;
 
-static yyconst short int yy_chk[11] =
+static yyconst short int yy_chk[12] =
     {   0,
-        8,    8,    9,    3,    2,    1,    7,    7,    7,    7
+        1,    1,    1,    1,    9,    3,    8,    8,    8,    8,
+        8
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -360,9 +362,9 @@ static char *yy_last_accepting_cpos;
 extern int yy_flex_debug;
 int yy_flex_debug = 1;
 
-static yyconst short int yy_rule_linenum[2] =
+static yyconst short int yy_rule_linenum[3] =
     {   0,
-       64
+       38,   39
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -375,33 +377,20 @@ static yyconst short int yy_rule_linenum[2] =
 char *yytext;
 #line 1 "cool.flex"
 #define INITIAL 0
-/*
- *  The scanner definition for COOL.
- */
-/*
- *  Stuff enclosed in %{ %} in the first section is copied verbatim to the
- *  output, so headers and global definitions are placed here to be visible
- * to the code in the file.  Don't remove anything that was here initially
- */
-#line 11 "cool.flex"
+#line 3 "cool.flex"
 #include <cool-parse.h>
 #include <stringtab.h>
 #include <utilities.h>
 
-/* The compiler assumes these identifiers. */
 #define yylval cool_yylval
 #define yylex  cool_yylex
 
-/* Max size of string constants */
 #define MAX_STR_CONST 1025
-#define YY_NO_UNPUT   /* keep g++ happy */
+#define YY_NO_UNPUT  
 
-extern FILE *fin; /* we read from this file */
+extern FILE *fin;
 
-/* define YY_INPUT so we read from the FILE fin:
- * This change makes it possible to use this scanner in
- * the Cool compiler.
- */
+
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) \
 	if ( (result = fread( (char*)buf, sizeof(char), max_size, fin)) < 0) \
@@ -415,14 +404,7 @@ extern int verbose_flag;
 
 extern YYSTYPE cool_yylval;
 
-/*
- *  Add Your own definitions here
- */
-
-/*
- * Define names for regular expressions here.
- */
-#line 426 "cool-lex.cc"
+#line 408 "cool-lex.cc"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -584,18 +566,11 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 54 "cool.flex"
+#line 35 "cool.flex"
 
 
- /*
-  *  Nested comments
-  */
 
-
- /*
-  *  The multiple-character operators.
-  */
-#line 599 "cool-lex.cc"
+#line 574 "cool-lex.cc"
 
 	if ( yy_init )
 		{
@@ -646,7 +621,7 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 8 )
+				if ( yy_current_state >= 9 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -672,13 +647,13 @@ do_action:	/* This label is used only to access EOF actions. */
 			{
 			if ( yy_act == 0 )
 				fprintf( stderr, "--scanner backing up\n" );
-			else if ( yy_act < 2 )
+			else if ( yy_act < 3 )
 				fprintf( stderr, "--accepting rule at line %d (\"%s\")\n",
 				         yy_rule_linenum[yy_act], yytext );
-			else if ( yy_act == 2 )
+			else if ( yy_act == 3 )
 				fprintf( stderr, "--accepting default rule (\"%s\")\n",
 				         yytext );
-			else if ( yy_act == 3 )
+			else if ( yy_act == 4 )
 				fprintf( stderr, "--(end of buffer or a NUL)\n" );
 			else
 				fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
@@ -695,25 +670,20 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 64 "cool.flex"
+#line 38 "cool.flex"
 { return (DARROW); }
 	YY_BREAK
-/*
-  * Keywords are case-insensitive except for the values true and false,
-  * which must begin with a lower-case letter.
-  */
-/*
-  *  String constants (C syntax)
-  *  Escape sequence \c is accepted for all characters c. Except for 
-  *  \n \t \b \f, the result is c.
-  *
-  */
 case 2:
 YY_RULE_SETUP
-#line 80 "cool.flex"
+#line 39 "cool.flex"
+printf("unexpected char\n");
+	YY_BREAK
+case 3:
+YY_RULE_SETUP
+#line 42 "cool.flex"
 ECHO;
 	YY_BREAK
-#line 717 "cool-lex.cc"
+#line 687 "cool-lex.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1005,7 +975,7 @@ static yy_state_type yy_get_previous_state()
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 8 )
+			if ( yy_current_state >= 9 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1040,11 +1010,11 @@ yy_state_type yy_current_state;
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 8 )
+		if ( yy_current_state >= 9 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 7);
+	yy_is_jam = (yy_current_state == 8);
 
 	return yy_is_jam ? 0 : yy_current_state;
 	}
@@ -1603,5 +1573,5 @@ int main()
 	return 0;
 	}
 #endif
-#line 80 "cool.flex"
+#line 42 "cool.flex"
 
