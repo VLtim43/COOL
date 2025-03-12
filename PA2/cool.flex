@@ -26,7 +26,13 @@ extern int verbose_flag;
 
 extern YYSTYPE cool_yylval;
 
+int comment_depth = 0;  /* For nested comments */
+
 %}
+
+%x SINGLE_COMMENT_STATE
+%x MULTI_COMMENT_STATE
+
 
 /* Regular Expressions definitions */
 
@@ -38,9 +44,25 @@ DARROW          =>
 LE              <=
 ASSIGN          <-
 
+SINGLE_COMMENT  "--".*
+COMMENT_MULTI_OPEN   "(*"
+COMMENT_MULTI_CLOSE  "*)"
+
 WHITESPACE  [ \f\r\t\v\n]+ 
 
 %%
+		/* ------------------------------- COMMENTS  ------------------------------- */	
+
+{SINGLE_COMMENT}                { BEGIN(SINGLE_COMMENT_STATE); }
+
+<SINGLE_COMMENT_STATE>.*        {}
+
+<SINGLE_COMMENT_STATE>\n        { 
+                                    curr_lineno++;  
+                                    BEGIN(INITIAL);  
+                                }
+
+
 		/* ------------------------------- IDENTIFIERS AND OPERATORS  ------------------------------- */	
 			    
 {TYPEID}        {
@@ -61,22 +83,22 @@ WHITESPACE  [ \f\r\t\v\n]+
 {DARROW}		{   return DARROW; }
 {LE}            {   return LE;     }
 {ASSIGN}        {   return ASSIGN; }
-"+"             {   return '+'; }
-"/"             {   return '/'; }
-"-"             {   return '-'; }
-"*"             {   return '*'; }
-"="             {   return '='; }
-"<"             {   return '<'; }
-"."             {   return '.'; }
-"~"             {   return '~'; }
-","             {   return ','; }
-";"             {   return ';'; }
-":"             {   return ':'; }
-"("             {   return '('; }
-")"             {   return ')'; }
-"@"             {   return '@'; }
-"{"             {   return '{'; }
-"}"             {   return '}'; }
+"+"             {   return '+';    }
+"/"             {   return '/';    }
+"-"             {   return '-';    }
+"*"             {   return '*';    }
+"="             {   return '=';    }
+"<"             {   return '<';    }
+"."             {   return '.';    }
+"~"             {   return '~';    }
+","             {   return ',';    }
+";"             {   return ';';    }
+":"             {   return ':';    }
+"("             {   return '(';    }
+")"             {   return ')';    }
+"@"             {   return '@';    }
+"{"             {   return '{';    }
+"}"             {   return '}';    }
 
 		/* ------------------------------- MISC  ------------------------------- */		    
 

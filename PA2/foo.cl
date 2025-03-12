@@ -3,3 +3,6 @@ class Main inherits IO {
 	out_string("Hello, World.\n")
    };
 };
+
+
+-- this is a single line comment
