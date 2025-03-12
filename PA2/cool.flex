@@ -59,8 +59,24 @@ WHITESPACE  [ \f\r\t\v\n]+
 
 
 {DARROW}		{   return DARROW; }
-{LE}            {   return LE; }
+{LE}            {   return LE;     }
 {ASSIGN}        {   return ASSIGN; }
+"+"             {   return '+'; }
+"/"             {   return '/'; }
+"-"             {   return '-'; }
+"*"             {   return '*'; }
+"="             {   return '='; }
+"<"             {   return '<'; }
+"."             {   return '.'; }
+"~"             {   return '~'; }
+","             {   return ','; }
+";"             {   return ';'; }
+":"             {   return ':'; }
+"("             {   return '('; }
+")"             {   return ')'; }
+"@"             {   return '@'; }
+"{"             {   return '{'; }
+"}"             {   return '}'; }
 
 		/* ------------------------------- MISC  ------------------------------- */		    
 
