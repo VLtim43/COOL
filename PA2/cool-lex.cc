@@ -290,11 +290,11 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 3
-#define YY_END_OF_BUFFER 4
+#define YY_NUM_RULES 4
+#define YY_END_OF_BUFFER 5
 static yyconst short int yy_accept[9] =
     {   0,
-        0,    0,    4,    2,    3,    2,    1,    0
+        0,    0,    5,    3,    2,    1,    1,    0
     } ;
 
 static yyconst int yy_ec[256] =
@@ -303,9 +303,9 @@ static yyconst int yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    3,    3,    3,
+        3,    3,    3,    3,    3,    3,    3,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        3,    4,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -329,31 +329,29 @@ static yyconst int yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst int yy_meta[5] =
+static yyconst int yy_meta[4] =
     {   0,
-        1,    1,    1,    2
+        1,    1,    2
     } ;
 
 static yyconst short int yy_base[10] =
     {   0,
-        0,    0,    6,    7,    7,    0,    7,    7,    3
+        0,    0,    5,    6,    6,    0,    0,    6,    2
     } ;
 
 static yyconst short int yy_def[10] =
     {   0,
-        8,    1,    8,    8,    8,    9,    8,    0,    8
+        8,    1,    8,    8,    8,    9,    9,    0,    8
     } ;
 
-static yyconst short int yy_nxt[12] =
+static yyconst short int yy_nxt[10] =
     {   0,
-        4,    5,    6,    4,    7,    8,    3,    8,    8,    8,
-        8
+        4,    5,    6,    7,    8,    3,    8,    8,    8
     } ;
 
-static yyconst short int yy_chk[12] =
+static yyconst short int yy_chk[10] =
     {   0,
-        1,    1,    1,    1,    9,    3,    8,    8,    8,    8,
-        8
+        1,    1,    1,    9,    3,    8,    8,    8,    8
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -362,9 +360,9 @@ static char *yy_last_accepting_cpos;
 extern int yy_flex_debug;
 int yy_flex_debug = 1;
 
-static yyconst short int yy_rule_linenum[3] =
+static yyconst short int yy_rule_linenum[4] =
     {   0,
-       38,   39
+       40,   43,   44
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -396,7 +394,7 @@ extern FILE *fin;
 	if ( (result = fread( (char*)buf, sizeof(char), max_size, fin)) < 0) \
 		YY_FATAL_ERROR( "read() in flex scanner failed");
 
-char string_buf[MAX_STR_CONST]; /* to assemble string constants */
+char string_buf[MAX_STR_CONST]; 
 char *string_buf_ptr;
 
 extern int curr_lineno;
@@ -404,7 +402,8 @@ extern int verbose_flag;
 
 extern YYSTYPE cool_yylval;
 
-#line 408 "cool-lex.cc"
+/* Regular Expressions definitions */
+#line 407 "cool-lex.cc"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -566,11 +565,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 35 "cool.flex"
+#line 38 "cool.flex"
 
 
-
-#line 574 "cool-lex.cc"
+#line 572 "cool-lex.cc"
 
 	if ( yy_init )
 		{
@@ -627,7 +625,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 7 );
+		while ( yy_base[yy_current_state] != 6 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -647,13 +645,13 @@ do_action:	/* This label is used only to access EOF actions. */
 			{
 			if ( yy_act == 0 )
 				fprintf( stderr, "--scanner backing up\n" );
-			else if ( yy_act < 3 )
+			else if ( yy_act < 4 )
 				fprintf( stderr, "--accepting rule at line %d (\"%s\")\n",
 				         yy_rule_linenum[yy_act], yytext );
-			else if ( yy_act == 3 )
+			else if ( yy_act == 4 )
 				fprintf( stderr, "--accepting default rule (\"%s\")\n",
 				         yytext );
-			else if ( yy_act == 4 )
+			else if ( yy_act == 5 )
 				fprintf( stderr, "--(end of buffer or a NUL)\n" );
 			else
 				fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
@@ -670,20 +668,25 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 38 "cool.flex"
-{ return (DARROW); }
+#line 40 "cool.flex"
+{printf("number");}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 39 "cool.flex"
-printf("unexpected char\n");
+#line 43 "cool.flex"
+{ curr_lineno++; } /* We increase the line counter */
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 42 "cool.flex"
+#line 44 "cool.flex"
+{ printf("unexpected char: %s\n", yytext); }
+	YY_BREAK
+case 4:
+YY_RULE_SETUP
+#line 47 "cool.flex"
 ECHO;
 	YY_BREAK
-#line 687 "cool-lex.cc"
+#line 690 "cool-lex.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1573,5 +1576,5 @@ int main()
 	return 0;
 	}
 #endif
-#line 42 "cool.flex"
+#line 47 "cool.flex"
 

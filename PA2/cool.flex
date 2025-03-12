@@ -28,15 +28,20 @@ extern YYSTYPE cool_yylval;
 
 %}
 
+/* Regular Expressions definitions */
 
-LETTER []
-DARROW          =>
+ALPHANUMERIC    [a-zA-Z0-9_]
+NUMBER          [0-9]
+TYPEID          [A-Z]{ALPHANUMERIC}*
+OBJECTID        [a-z]{ALPHANUMERIC}*
 
 %%
 
+{NUMBER}+	  {printf("number");}
 
-{DARROW}		{ return (DARROW); }
-.           printf("unexpected char\n");
+
+\n            { curr_lineno++; } /* We increase the line counter */
+.             { printf("unexpected char: %s\n", yytext); }
 
 
 %%
