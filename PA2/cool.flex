@@ -37,11 +37,13 @@ OBJECTID        [a-z]{ALPHANUMERIC}*
 
 %%
 
-{NUMBER}+	  {printf("number");}
+{NUMBER}+ 		{ 
+    				cool_yylval.symbol = inttable.add_string(yytext);
+   					 return INT_CONST; 
+				}
 
-
-\n            { curr_lineno++; } /* We increase the line counter */
-.             { printf("unexpected char: %s\n", yytext); }
+\n				{ curr_lineno++; } /* We increase the line counter */
+.               { printf("unexpected char: %s\n", yytext); }
 
 
 %%
