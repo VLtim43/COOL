@@ -1,1 +1,0 @@
-/var/tmp/cool/src/PA2/stringtab.cc
