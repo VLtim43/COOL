@@ -26,7 +26,7 @@ extern int verbose_flag;
 
 extern YYSTYPE cool_yylval;
 
-int comment_depth = 0;  /* For nested comments */
+int comment_depth = 0;  
 
 %}
 
@@ -44,16 +44,16 @@ DARROW          =>
 LE              <=
 ASSIGN          <-
 
-SINGLE_COMMENT  "--".*
-COMMENT_MULTI_OPEN   "(*"
-COMMENT_MULTI_CLOSE  "*)"
+SINGLE_COMMENT         "--".*
+MULTI_COMMENT_OPEN     "(*"
+MULTI_COMMENT_CLOSE    "*)"
 
 WHITESPACE  [ \f\r\t\v\n]+ 
 
 %%
 		/* ------------------------------- COMMENTS  ------------------------------- */	
 
-{SINGLE_COMMENT}                { BEGIN(SINGLE_COMMENT_STATE); }
+{SINGLE_COMMENT}                {   BEGIN(SINGLE_COMMENT_STATE); }
 
 <SINGLE_COMMENT_STATE>.*        {}
 
@@ -61,7 +61,13 @@ WHITESPACE  [ \f\r\t\v\n]+
                                     curr_lineno++;  
                                     BEGIN(INITIAL);  
                                 }
+                                
 
+
+
+
+
+                                
 
 		/* ------------------------------- IDENTIFIERS AND OPERATORS  ------------------------------- */	
 			    
