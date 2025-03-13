@@ -45,6 +45,25 @@ DARROW          =>
 LE              <=
 ASSIGN          <-
 
+
+CLASS       [cC][lL][aA][sS][sS]
+ELSE        [eE][lL][sS][eE]
+FI          [fF][iI]
+IF          [iI][fF]
+IN          [iI][nN]
+INHERITS    [iI][nN][hH][eE][rR][iI][tT][sS]
+LET         [lL][eE][tT]
+LOOP        [lL][oO][oO][pP]
+POOL        [pP][oO][oO][lL]
+THEN        [tT][hH][eE][nN]
+WHILE       [wW][hH][iI][lL][eE]
+CASE        [cC][aA][sS][eE]
+ESAC        [eE][sS][aA][cC]
+OF          [oO][fF]
+NEW         [nN][eE][wW]
+NOT         [nN][oO][tT]
+ISVOID      [iI][sS][vV][oO][iI][dD]
+
 SINGLE_COMMENT         "--".*
 WHITESPACE  [ \f\r\t\v\n]+ 
 
@@ -126,6 +145,9 @@ WHITESPACE  [ \f\r\t\v\n]+
 "{"             {   return '{';    }
 "}"             {   return '}';    }
 
+
+
+
 		/* ------------------------------- STRINGS  ------------------------------- */	
 
 \"              { 
@@ -156,6 +178,30 @@ WHITESPACE  [ \f\r\t\v\n]+
                         *string_buf_ptr++ = yytext[0];
                     } 
                 }
+
+
+		/* ------------------------------- KEYWORDS  ------------------------------- */	
+
+{CLASS}       { return CLASS; }
+{ELSE}        { return ELSE; }
+{FI}          { return FI; }
+{IF}          { return IF; }
+{IN}          { return IN; }
+{INHERITS}    { return INHERITS; }
+{LET}         { return LET; }
+{LOOP}        { return LOOP; }
+{POOL}        { return POOL; }
+{THEN}        { return THEN; }
+{WHILE}       { return WHILE; }
+{CASE}        { return CASE; }
+{ESAC}        { return ESAC; }
+{OF}          { return OF; }
+{NEW}         { return NEW; }
+{NOT}         { return NOT; }
+{ISVOID}      { return ISVOID; }
+
+
+
 
 
 		/* ------------------------------- MISC  ------------------------------- */		    
