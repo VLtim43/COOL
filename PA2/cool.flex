@@ -30,8 +30,9 @@ int comment_depth = 0;
 
 %}
 
-%x SINGLE_COMMENT_STATE
-%x STRING_STATE
+
+%x STATE_SINGLE_COMMENT
+%x STATE_MULTI_COMMENT
 
 /* Regular Expressions definitions */
 
@@ -49,14 +50,42 @@ WHITESPACE  [ \f\r\t\v\n]+
 %%
 		/* ------------------------------- COMMENTS  ------------------------------- */	
 
-{SINGLE_COMMENT}                {   BEGIN(SINGLE_COMMENT_STATE); }
+"(*"                        {
+                                comment_depth++;
+                                BEGIN(STATE_SINGLE_COMMENT);
+                            }
 
-<SINGLE_COMMENT_STATE>.*        {}
+<STATE_SINGLE_COMMENT>"(*"               {   comment_depth++; }
 
-<SINGLE_COMMENT_STATE>\n        { 
-                                    curr_lineno++;  
-                                    BEGIN(INITIAL);  
+<STATE_SINGLE_COMMENT>.                  {}
+
+<STATE_SINGLE_COMMENT>\n                 {   curr_lineno++; }
+
+<STATE_SINGLE_COMMENT>"*)"               {
+                                comment_depth--;
+                                if (comment_depth == 0) {
+                                    BEGIN(INITIAL);
                                 }
+                            }
+
+<STATE_SINGLE_COMMENT><<EOF>>            {
+                                BEGIN(INITIAL);
+                                return ERROR;
+	                        }
+
+"*)"                        {
+                                BEGIN(INITIAL);
+                                return ERROR;
+	                        }
+
+"--"                        {   BEGIN(STATE_MULTI_COMMENT); }
+
+<STATE_MULTI_COMMENT>.      {}
+
+<STATE_MULTI_COMMENT>\n     {
+                                curr_lineno++;
+                                BEGIN(INITIAL);
+                            }
                                 
 
 		/* ------------------------------- IDENTIFIERS AND OPERATORS  ------------------------------- */	
@@ -97,9 +126,7 @@ WHITESPACE  [ \f\r\t\v\n]+
 "}"             {   return '}';    }
 
 		/* ------------------------------- STRINGS  ------------------------------- */	
-\"              {
-                    BEGIN(STRING_STATE);
-	            }
+
 
 
 
