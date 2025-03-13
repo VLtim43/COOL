@@ -33,6 +33,7 @@ int comment_depth = 0;
 
 %x STATE_SINGLE_COMMENT
 %x STATE_MULTI_COMMENT
+%x STATE_STRING
 
 /* Regular Expressions definitions */
 
@@ -127,7 +128,34 @@ WHITESPACE  [ \f\r\t\v\n]+
 
 		/* ------------------------------- STRINGS  ------------------------------- */	
 
+\"              { 
+                    string_buf_ptr = string_buf;
+                    BEGIN(STATE_STRING); 
+                }
 
+<STATE_STRING>\" { 
+                    *string_buf_ptr = '\0';
+                    cool_yylval.symbol = stringtable.add_string(string_buf);
+                    BEGIN(INITIAL);
+                    return STR_CONST;
+                }
+
+<STATE_STRING>\n { 
+                    curr_lineno++; 
+                    BEGIN(INITIAL);
+                    printf("Unterminated string literal\n");
+                    return ERROR;
+                }
+
+<STATE_STRING>\\\" { 
+                    *string_buf_ptr++ = '\"'; 
+                }
+
+<STATE_STRING>. { 
+                    if (string_buf_ptr - string_buf < MAX_STR_CONST - 1) {
+                        *string_buf_ptr++ = yytext[0];
+                    } 
+                }
 
 
 		/* ------------------------------- MISC  ------------------------------- */		    
