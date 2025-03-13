@@ -31,8 +31,7 @@ int comment_depth = 0;
 %}
 
 %x SINGLE_COMMENT_STATE
-%x MULTI_COMMENT_STATE
-
+%x STRING_STATE
 
 /* Regular Expressions definitions */
 
@@ -45,9 +44,6 @@ LE              <=
 ASSIGN          <-
 
 SINGLE_COMMENT         "--".*
-MULTI_COMMENT_OPEN     "(*"
-MULTI_COMMENT_CLOSE    "*)"
-
 WHITESPACE  [ \f\r\t\v\n]+ 
 
 %%
@@ -61,12 +57,6 @@ WHITESPACE  [ \f\r\t\v\n]+
                                     curr_lineno++;  
                                     BEGIN(INITIAL);  
                                 }
-                                
-
-
-
-
-
                                 
 
 		/* ------------------------------- IDENTIFIERS AND OPERATORS  ------------------------------- */	
@@ -105,6 +95,13 @@ WHITESPACE  [ \f\r\t\v\n]+
 "@"             {   return '@';    }
 "{"             {   return '{';    }
 "}"             {   return '}';    }
+
+		/* ------------------------------- STRINGS  ------------------------------- */	
+\"              {
+                    BEGIN(STRING_STATE);
+	            }
+
+
 
 		/* ------------------------------- MISC  ------------------------------- */		    
 
