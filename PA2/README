@@ -118,4 +118,6 @@ grading.
 
 ---8<------8<------8<------8<---cut here---8<------8<------8<------8<---
 
-This is the Lexical Analyzer for the Cool language made with the tool "Flex". Innitially I had issues trying to compile and bootstrap the program, but after some tries I managed to understand the basic premise.
+This is the Lexical Analyzer for the Cool language made with the tool "Flex". Innitially I had issues trying to compile and bootstrap the program, but after some tries I managed to understand the basic premise and how flex works. First, I had to uninstall the package "flex" and use instead "flex-old". The former simply didn't worked with the assigment provided enviroment.
+
+After being able to execute the makefile I wrote a small shellscript program just to alwasy run "gmake clean" and "./lexer foo.cl" to make the development and debugging of each step easier

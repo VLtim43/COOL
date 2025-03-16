@@ -65,10 +65,9 @@ NOT         [nN][oO][tT]
 ISVOID      [iI][sS][vV][oO][iI][dD]
 
 SINGLE_COMMENT         "--".*
-WHITESPACE  [ \f\r\t\v\n]+ 
+WHITESPACE  [ \f\r\t\v]+
 
 %%
-		/* ------------------------------- COMMENTS  ------------------------------- */	
 
 "(*"                                    {
                                             comment_depth++;
@@ -108,18 +107,7 @@ WHITESPACE  [ \f\r\t\v\n]+
                                             curr_lineno++;
                                             BEGIN(INITIAL);
                                         }
-                                
 
-		/* ------------------------------- IDENTIFIERS AND OPERATORS  ------------------------------- */	
-			    
-{TYPEID}        {
-                    cool_yylval.symbol = stringtable.add_string(yytext);
-                    return (TYPEID);
-	            }
-{OBJECTID}      {
-                    cool_yylval.symbol = stringtable.add_string(yytext);
-                    return (OBJECTID);
-	            }
 
 {NUMBER}+       { 
                     cool_yylval.symbol = inttable.add_string(yytext);
@@ -148,9 +136,32 @@ WHITESPACE  [ \f\r\t\v\n]+
 "}"             {   return '}';    }
 
 
+{CLASS}       { return CLASS; }
+{ELSE}        { return ELSE; }
+{FI}          { return FI; }
+{IF}          { return IF; }
+{IN}          { return IN; }
+{INHERITS}    { return INHERITS; }
+{LET}         { return LET; }
+{LOOP}        { return LOOP; }
+{POOL}        { return POOL; }
+{THEN}        { return THEN; }
+{WHILE}       { return WHILE; }
+{CASE}        { return CASE; }
+{ESAC}        { return ESAC; }
+{OF}          { return OF; }
+{NEW}         { return NEW; }
+{NOT}         { return NOT; }
+{ISVOID}      { return ISVOID; }
 
-
-		/* ------------------------------- STRINGS  ------------------------------- */	
+{TYPEID}        {
+                    cool_yylval.symbol = stringtable.add_string(yytext);
+                    return (TYPEID);
+	            }
+{OBJECTID}      {
+                    cool_yylval.symbol = stringtable.add_string(yytext);
+                    return (OBJECTID);
+	            }
 
 \"                          { 
                                 string_buf_ptr = string_buf;
@@ -170,10 +181,6 @@ WHITESPACE  [ \f\r\t\v\n]+
                                 cool_yylval.error_msg = "Unterminated string constant";
                                 return ERROR; 
                             }           
-
-<STATE_STRING>\\\"          { 
-                                *string_buf_ptr++ = '\"'; 
-                            }
 
 <STATE_STRING>.             { 
                                 if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
@@ -199,30 +206,6 @@ WHITESPACE  [ \f\r\t\v\n]+
 
 <STATE_STRING_ERROR>.       {}                    
 
-
-
-		/* ------------------------------- KEYWORDS  ------------------------------- */	
-
-{CLASS}       { return CLASS; }
-{ELSE}        { return ELSE; }
-{FI}          { return FI; }
-{IF}          { return IF; }
-{IN}          { return IN; }
-{INHERITS}    { return INHERITS; }
-{LET}         { return LET; }
-{LOOP}        { return LOOP; }
-{POOL}        { return POOL; }
-{THEN}        { return THEN; }
-{WHILE}       { return WHILE; }
-{CASE}        { return CASE; }
-{ESAC}        { return ESAC; }
-{OF}          { return OF; }
-{NEW}         { return NEW; }
-{NOT}         { return NOT; }
-{ISVOID}      { return ISVOID; }
-
-
-		/* ------------------------------- MISC  ------------------------------- */		    
 
 {WHITESPACE}    {}        
 \n              {   curr_lineno++; }
