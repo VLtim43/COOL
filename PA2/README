@@ -118,6 +118,13 @@ grading.
 
 ---8<------8<------8<------8<---cut here---8<------8<------8<------8<---
 
-This is the Lexical Analyzer for the Cool language made with the tool "Flex". Innitially I had issues trying to compile and bootstrap the program, but after some tries I managed to understand the basic premise and how flex works. First, I had to uninstall the package "flex" and use instead "flex-old". The former simply didn't worked with the assigment provided enviroment.
+This is the Lexical Analyzer for the Cool language, built using the **Flex** tool.  
+Initially, I had trouble compiling and initializing the program, but after a few attempts, I was able to understand the basic premise of how Flex works. First, I had to uninstall the "flex" package and use "flex-old" instead, as the former simply didn’t work with the environment provided by the assignment.  
+Once I was able to run the makefile, I wrote a small shell script to also run `gmake clean` and `./lexer foo.cl`, making it easier to develop and debug each step.  
 
-After being able to execute the makefile I wrote a small shellscript program just to alwasy run "gmake clean" and "./lexer foo.cl" to make the development and debugging of each step easier
+First, we handle comments, which can be either single-line (`--`) or multi-line. We support nested comments by keeping track of the comment depth.  
+Two specific errors are thrown: one when encountering an EOF inside a comment and another when an unmatched `*)` is found.  
+Strings were harder to match than I expected. Valid strings are enclosed in double quotes (`"`), and we support escape characters like `\n` and `\t`. Malformed strings move the state to `STATE_STRING_ERROR`, which attempts to recover errors and prevent cascading failures. We use `string_buf_ptr` and `string_buf` to keep track of string sizes.  
+
+Next, we match keywords and operators. I couldn’t find a better way to match the different cases for keywords besides using a regex pair for each letter.  
+Throughout the program, we keep track of new lines using `curr_lineno`.

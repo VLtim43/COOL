@@ -10,6 +10,13 @@
 #define MAX_STR_CONST 1025
 #define YY_NO_UNPUT  
 
+
+#define CHECK_STRING_OVERFLOW() \
+    if ((string_buf_ptr - string_buf) >= MAX_STR_CONST - 1) { \
+        cool_yylval.error_msg = "String constant too long"; \
+        BEGIN(STATE_STRING_ERROR); \
+}
+
 extern FILE *fin;
 
 
@@ -140,58 +147,35 @@ WHITESPACE  [ \f\r\t\v]+
 
 
 <STATE_STRING>\\[^ntbf] { 
-                                if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
-                                    cool_yylval.error_msg = "String constant too long";
-                                    BEGIN(STATE_STRING_ERROR); 
-                                } else {
-                                    *string_buf_ptr++ = yytext[1];
-                                }
-                            }
+    CHECK_STRING_OVERFLOW();
+    *string_buf_ptr++ = yytext[1];
+}
 
-<STATE_STRING>\\[n]               { 
-                                if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
-                                    cool_yylval.error_msg = "String constant too long";
-                                    BEGIN(STATE_STRING_ERROR); 
-                                } else {
-                                    *string_buf_ptr++ = '\n';
-                                }
-                            }
+<STATE_STRING>\\[n] { 
+    CHECK_STRING_OVERFLOW();
+    *string_buf_ptr++ = '\n';
+}
 
-<STATE_STRING>\\[t]               { 
-                                if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
-                                    cool_yylval.error_msg = "String constant too long";
-                                    BEGIN(STATE_STRING_ERROR); 
-                                } else {
-                                    *string_buf_ptr++ = '\t';
-                                }
-                            }
+<STATE_STRING>\\[t] { 
+    CHECK_STRING_OVERFLOW();
+    *string_buf_ptr++ = '\t';
+}
 
-<STATE_STRING>\\[b]               { 
-                                if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
-                                    cool_yylval.error_msg = "String constant too long";
-                                    BEGIN(STATE_STRING_ERROR); 
-                                } else {
-                                    *string_buf_ptr++ = '\b';
-                                }
-                            }
+<STATE_STRING>\\[b] { 
+    CHECK_STRING_OVERFLOW();
+    *string_buf_ptr++ = '\b';
+}
 
-<STATE_STRING>\\[f]               { 
-                                if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
-                                    cool_yylval.error_msg = "String constant too long";
-                                    BEGIN(STATE_STRING_ERROR); 
-                                } else {
-                                    *string_buf_ptr++ = '\f';
-                                }
-                            }
+<STATE_STRING>\\[f] { 
+    CHECK_STRING_OVERFLOW();
+    *string_buf_ptr++ = '\f';
+}
 
-<STATE_STRING>.             { 
-                                if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
-                                    cool_yylval.error_msg = "String constant too long";
-                                    BEGIN(STATE_STRING_ERROR); 
-                                } else {
-                                    *string_buf_ptr++ = *yytext;  
-                                }
-                            }
+<STATE_STRING>. { 
+    CHECK_STRING_OVERFLOW();
+    *string_buf_ptr++ = *yytext;  
+}
+
 
 
 <STATE_STRING_ERROR>\"      {
@@ -206,6 +190,12 @@ WHITESPACE  [ \f\r\t\v]+
                                 curr_lineno++;
                                 BEGIN(INITIAL);
 	                        }
+
+<STATE_STRING>\\0           {
+                                cool_yylval.error_msg = "String contains null character";
+                                BEGIN(STATE_STRING_ERROR);
+                                return ERROR;
+                            }
 
 <STATE_STRING_ERROR>.       {}      
 
