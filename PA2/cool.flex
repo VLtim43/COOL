@@ -30,7 +30,6 @@ int comment_depth = 0;
 
 %}
 
-
 %x STATE_SINGLE_COMMENT
 %x STATE_MULTI_COMMENT
 %x STATE_STRING
@@ -44,7 +43,6 @@ OBJECTID        [a-z]{ALPHANUMERIC}*
 DARROW          =>
 LE              <=
 ASSIGN          <-
-
 
 CLASS       [cC][lL][aA][sS][sS]
 ELSE        [eE][lL][sS][eE]
@@ -88,10 +86,11 @@ WHITESPACE  [ \f\r\t\v\n]+
                                 }
                             }
 
-<STATE_SINGLE_COMMENT><<EOF>>            {
-                                BEGIN(INITIAL);
-                                return ERROR;
-	                        }
+<STATE_SINGLE_COMMENT><<EOF>>           {
+                                            cool_yylval.error_msg = "EOF in comment";
+                                            BEGIN(INITIAL);
+                                            return ERROR;
+                                        }
 
 "*)"                        {
                                 BEGIN(INITIAL);
@@ -164,10 +163,10 @@ WHITESPACE  [ \f\r\t\v\n]+
 
 <STATE_STRING>\n { 
                     curr_lineno++; 
-                    BEGIN(INITIAL);
-                    printf("Unterminated string literal\n");
-                    return ERROR;
-                }
+                    BEGIN(INITIAL); 
+                    cool_yylval.error_msg = "Unterminated string constant";
+                    return ERROR; 
+                }           
 
 <STATE_STRING>\\\" { 
                     *string_buf_ptr++ = '\"'; 
@@ -201,14 +200,18 @@ WHITESPACE  [ \f\r\t\v\n]+
 {ISVOID}      { return ISVOID; }
 
 
-
-
-
 		/* ------------------------------- MISC  ------------------------------- */		    
 
 {WHITESPACE}    {}        
 \n              { curr_lineno++; }
-.               { printf("unexpected char: %s\n", yytext); }
+. { 
+    cool_yylval.error_msg = yytext;
+    return ERROR;  
+}
 
 %%
+
+
+
+		/* ------------------------------- Auxiliary functions  ------------------------------- */		    
 

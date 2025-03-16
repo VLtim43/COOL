@@ -117,3 +117,5 @@ grading.
     GOOD LUCK!
 
 ---8<------8<------8<------8<---cut here---8<------8<------8<------8<---
+
+This is the Lexical Analyzer for the Cool language made with the tool "Flex". Innitially I had issues trying to compile and bootstrap the program, but after some tries I managed to understand the basic premise.
