@@ -70,18 +70,18 @@ WHITESPACE  [ \f\r\t\v\n]+
 %%
 		/* ------------------------------- COMMENTS  ------------------------------- */	
 
-"(*"                                        {
-                                                comment_depth++;
-                                                BEGIN(STATE_SINGLE_COMMENT);
-                                            }
+"(*"                                    {
+                                            comment_depth++;
+                                            BEGIN(STATE_SINGLE_COMMENT);
+                                        }
 
-<STATE_SINGLE_COMMENT>"(*"               {   comment_depth++; }
+<STATE_SINGLE_COMMENT>"(*"              {   comment_depth++; }
 
-<STATE_SINGLE_COMMENT>.                  {}
+<STATE_SINGLE_COMMENT>.                 {}
 
-<STATE_SINGLE_COMMENT>\n                 {   curr_lineno++; }
+<STATE_SINGLE_COMMENT>\n                {   curr_lineno++; }
 
-<STATE_SINGLE_COMMENT>"*)"               {
+<STATE_SINGLE_COMMENT>"*)"              {
                                             comment_depth--;
                                             if (comment_depth == 0) {
                                                 BEGIN(INITIAL);
@@ -94,20 +94,20 @@ WHITESPACE  [ \f\r\t\v\n]+
                                             return ERROR;
                                         }
 
-"*)"                        {
-                                cool_yylval.error_msg = "Unmatched *)";
-                                BEGIN(INITIAL);
-                                return ERROR;
-	                        }
+"*)"                                    {
+                                            cool_yylval.error_msg = "Unmatched *)";
+                                            BEGIN(INITIAL);
+                                            return ERROR;
+                                        }
 
-"--"                        {   BEGIN(STATE_MULTI_COMMENT); }
+"--"                                    {   BEGIN(STATE_MULTI_COMMENT); }
 
-<STATE_MULTI_COMMENT>.      {}
+<STATE_MULTI_COMMENT>.                  {}
 
-<STATE_MULTI_COMMENT>\n     {
-                                curr_lineno++;
-                                BEGIN(INITIAL);
-                            }
+<STATE_MULTI_COMMENT>\n                 {
+                                            curr_lineno++;
+                                            BEGIN(INITIAL);
+                                        }
                                 
 
 		/* ------------------------------- IDENTIFIERS AND OPERATORS  ------------------------------- */	
@@ -152,51 +152,52 @@ WHITESPACE  [ \f\r\t\v\n]+
 
 		/* ------------------------------- STRINGS  ------------------------------- */	
 
-\"              { 
-                    string_buf_ptr = string_buf;
-                    BEGIN(STATE_STRING); 
-                }
+\"                          { 
+                                string_buf_ptr = string_buf;
+                                BEGIN(STATE_STRING); 
+                            }
 
-<STATE_STRING>\" { 
-                    *string_buf_ptr = '\0';
-                    cool_yylval.symbol = stringtable.add_string(string_buf);
-                    BEGIN(INITIAL);
-                    return STR_CONST;
-                }
+<STATE_STRING>\"            { 
+                                *string_buf_ptr = '\0';
+                                cool_yylval.symbol = stringtable.add_string(string_buf);
+                                BEGIN(INITIAL);
+                                return STR_CONST;
+                            }
 
-<STATE_STRING>\n { 
-                    curr_lineno++; 
-                    BEGIN(INITIAL); 
-                    cool_yylval.error_msg = "Unterminated string constant";
-                    return ERROR; 
-                }           
+<STATE_STRING>\n            { 
+                                curr_lineno++; 
+                                BEGIN(INITIAL); 
+                                cool_yylval.error_msg = "Unterminated string constant";
+                                return ERROR; 
+                            }           
 
-<STATE_STRING>\\\"  { 
-                        *string_buf_ptr++ = '\"'; 
-                    }
+<STATE_STRING>\\\"          { 
+                                *string_buf_ptr++ = '\"'; 
+                            }
 
-<STATE_STRING>. { 
-                        if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
-                            cool_yylval.error_msg = "String constant too long";
-                            BEGIN(STATE_STRING_ERROR); 
-                        } else {
-                            *string_buf_ptr++ = yytext[0];  
-                        }
-                    }
+<STATE_STRING>.             { 
+                                if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
+                                    cool_yylval.error_msg = "String constant too long";
+                                    BEGIN(STATE_STRING_ERROR); 
+                                } else {
+                                    *string_buf_ptr++ = yytext[0];  
+                                }
+                            }
 
 
-<STATE_STRING_ERROR>\"  {
-                    BEGIN(INITIAL);
-	            }
-<STATE_STRING_ERROR>\\\n {
-	                curr_lineno++;
-                    BEGIN(INITIAL);
-                }
-<STATE_STRING_ERROR>\n  {
-	                curr_lineno++;
-                    BEGIN(INITIAL);
-	            }
-<STATE_STRING_ERROR>.   {}                    
+<STATE_STRING_ERROR>\"      {
+                                 BEGIN(INITIAL);
+	                        }
+<STATE_STRING_ERROR>\\\n    {
+                                curr_lineno++;
+                                BEGIN(INITIAL);
+                            }
+<STATE_STRING_ERROR>\n      {
+                                curr_lineno++;
+                                BEGIN(INITIAL);
+	                        }
+
+<STATE_STRING_ERROR>.       {}                    
 
 
 
@@ -224,15 +225,14 @@ WHITESPACE  [ \f\r\t\v\n]+
 		/* ------------------------------- MISC  ------------------------------- */		    
 
 {WHITESPACE}    {}        
-\n              { curr_lineno++; }
-. { 
-    cool_yylval.error_msg = yytext;
-    return ERROR;  
-}
+\n              {   curr_lineno++; }
+.               { 
+                    cool_yylval.error_msg = yytext;
+                    return ERROR;  
+                }
 
 %%
 
 
 
-		/* ------------------------------- Auxiliary functions  ------------------------------- */		    
 
