@@ -33,6 +33,8 @@ int comment_depth = 0;
 %x STATE_SINGLE_COMMENT
 %x STATE_MULTI_COMMENT
 %x STATE_STRING
+%x STATE_STRING_ERROR
+
 
 /* Regular Expressions definitions */
 
@@ -68,10 +70,10 @@ WHITESPACE  [ \f\r\t\v\n]+
 %%
 		/* ------------------------------- COMMENTS  ------------------------------- */	
 
-"(*"                        {
-                                comment_depth++;
-                                BEGIN(STATE_SINGLE_COMMENT);
-                            }
+"(*"                                        {
+                                                comment_depth++;
+                                                BEGIN(STATE_SINGLE_COMMENT);
+                                            }
 
 <STATE_SINGLE_COMMENT>"(*"               {   comment_depth++; }
 
@@ -80,11 +82,11 @@ WHITESPACE  [ \f\r\t\v\n]+
 <STATE_SINGLE_COMMENT>\n                 {   curr_lineno++; }
 
 <STATE_SINGLE_COMMENT>"*)"               {
-                                comment_depth--;
-                                if (comment_depth == 0) {
-                                    BEGIN(INITIAL);
-                                }
-                            }
+                                            comment_depth--;
+                                            if (comment_depth == 0) {
+                                                BEGIN(INITIAL);
+                                            }
+                                        }
 
 <STATE_SINGLE_COMMENT><<EOF>>           {
                                             cool_yylval.error_msg = "EOF in comment";
@@ -93,6 +95,7 @@ WHITESPACE  [ \f\r\t\v\n]+
                                         }
 
 "*)"                        {
+                                cool_yylval.error_msg = "Unmatched *)";
                                 BEGIN(INITIAL);
                                 return ERROR;
 	                        }
@@ -168,15 +171,33 @@ WHITESPACE  [ \f\r\t\v\n]+
                     return ERROR; 
                 }           
 
-<STATE_STRING>\\\" { 
-                    *string_buf_ptr++ = '\"'; 
-                }
+<STATE_STRING>\\\"  { 
+                        *string_buf_ptr++ = '\"'; 
+                    }
 
 <STATE_STRING>. { 
-                    if (string_buf_ptr - string_buf < MAX_STR_CONST - 1) {
-                        *string_buf_ptr++ = yytext[0];
-                    } 
+                        if (string_buf_ptr - string_buf >= MAX_STR_CONST - 1) { 
+                            cool_yylval.error_msg = "String constant too long";
+                            BEGIN(STATE_STRING_ERROR); 
+                        } else {
+                            *string_buf_ptr++ = yytext[0];  
+                        }
+                    }
+
+
+<STATE_STRING_ERROR>\"  {
+                    BEGIN(INITIAL);
+	            }
+<STATE_STRING_ERROR>\\\n {
+	                curr_lineno++;
+                    BEGIN(INITIAL);
                 }
+<STATE_STRING_ERROR>\n  {
+	                curr_lineno++;
+                    BEGIN(INITIAL);
+	            }
+<STATE_STRING_ERROR>.   {}                    
+
 
 
 		/* ------------------------------- KEYWORDS  ------------------------------- */	
