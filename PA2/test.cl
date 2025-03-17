@@ -53,13 +53,13 @@ class CellularAutomaton inherits IO {
         then
             "X"
         else
-            '.'
+            "." -- <- add double quotes here
         fi
     };
    
     evolve() : SELF_TYPE {
         (let position : Int in
-        (let num : Int <- num_cells[] in
+        (let num : Int <- num_cells() in <-- replace [ ] with ()
         (let temp : String in
             {
                 while position < num loop
@@ -83,14 +83,15 @@ class Main {
             cells <- (new CellularAutomaton).init("         X         ");
             cells.print();
             (let countdown : Int <- 20 in
-                while countdown > 0 loop
+                while 0 < countdown loop -- < thw while loop was incorrect
                     {
                         cells.evolve();
                         cells.print();
                         countdown <- countdown - 1;
-                    
-                pool
-            );  (* end let countdown
+                    }
+                pool 
+                -- removed unmatched *)
+            );
             self;
         }
     };

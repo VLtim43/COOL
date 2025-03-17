@@ -128,3 +128,6 @@ Strings were harder to match than I expected. Valid strings are enclosed in doub
 
 Next, we match keywords and operators. I couldn’t find a better way to match the different cases for keywords besides using a regex pair for each letter.  
 Throughout the program, we keep track of new lines using `curr_lineno`.
+
+
+"test.cl" is used as an example to verify that the Lexer is working, but its current implementation was (intentionally) incorrect. It has also been fixed
