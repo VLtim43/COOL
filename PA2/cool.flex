@@ -85,13 +85,13 @@ WHITESPACE  [ \f\r\t\v]+
                                             BEGIN(STATE_MULTI_COMMENT);
                                         }
 
-<STATE_MULTI_COMMENT>"(*"              {   comment_depth++; }
+<STATE_MULTI_COMMENT>"(*"               {   comment_depth++; }
 
-<STATE_MULTI_COMMENT>.                 {}
+<STATE_MULTI_COMMENT>.                  {}
 
-<STATE_MULTI_COMMENT>\n                {   curr_lineno++; }
+<STATE_MULTI_COMMENT>\n                 {   curr_lineno++; }
 
-<STATE_MULTI_COMMENT>"*)"              {
+<STATE_MULTI_COMMENT>"*)"               {
                                             comment_depth--;
                                             if (comment_depth == 0) {
                                                 BEGIN(INITIAL);
@@ -112,7 +112,7 @@ WHITESPACE  [ \f\r\t\v]+
 
 "--"                                    {   BEGIN(STATE_SINGLE_COMMENT); }
 
-<STATE_SINGLE_COMMENT>.                  {}
+<STATE_SINGLE_COMMENT>.                 {}
 
 <STATE_SINGLE_COMMENT>\n                {
                                             curr_lineno++;
@@ -120,84 +120,85 @@ WHITESPACE  [ \f\r\t\v]+
                                         }
 
 
-\"                          { 
-                                string_buf_ptr = string_buf;
-                                BEGIN(STATE_STRING); 
-                            }
+\"                                      { 
+                                            string_buf_ptr = string_buf;
+                                            BEGIN(STATE_STRING); 
+                                        }
 
-<STATE_STRING>\"            { 
-                                string_buf[0] = '\0';
-                                cool_yylval.symbol = stringtable.add_string(string_buf);
-                                BEGIN(INITIAL);
-                                return STR_CONST;
-                            }
+<STATE_STRING>\"                        { 
+                                            string_buf[0] = '\0';
+                                            cool_yylval.symbol = stringtable.add_string(string_buf);
+                                            BEGIN(INITIAL);
+                                            return STR_CONST;
+                                        }
 
-<STATE_STRING>\n            { 
-                                curr_lineno++; 
-                                string_buf[0] = '\0';
-                                BEGIN(INITIAL); 
-                                cool_yylval.error_msg = "Unterminated string constant";
-                                return ERROR; 
-                            }           
+<STATE_STRING>\n                        { 
+                                            curr_lineno++; 
+                                            string_buf[0] = '\0';
+                                            BEGIN(INITIAL); 
+                                            cool_yylval.error_msg = "Unterminated string constant";
+                                            return ERROR; 
+                                        }           
 
-<STATE_STRING><<EOF>>       { 
-                                cool_yylval.error_msg = "EOF in string constant";
-                                return ERROR; 
-                            }    
-
-
-<STATE_STRING>\\[^ntbf] { 
-    CHECK_STRING_OVERFLOW();
-    *string_buf_ptr++ = yytext[1];
-}
-
-<STATE_STRING>\\[n] { 
-    CHECK_STRING_OVERFLOW();
-    *string_buf_ptr++ = '\n';
-}
-
-<STATE_STRING>\\[t] { 
-    CHECK_STRING_OVERFLOW();
-    *string_buf_ptr++ = '\t';
-}
-
-<STATE_STRING>\\[b] { 
-    CHECK_STRING_OVERFLOW();
-    *string_buf_ptr++ = '\b';
-}
-
-<STATE_STRING>\\[f] { 
-    CHECK_STRING_OVERFLOW();
-    *string_buf_ptr++ = '\f';
-}
-
-<STATE_STRING>. { 
-    CHECK_STRING_OVERFLOW();
-    *string_buf_ptr++ = *yytext;  
-}
+<STATE_STRING><<EOF>>                   { 
+                                            cool_yylval.error_msg = "EOF in string constant";
+                                            return ERROR; 
+                                        }    
 
 
+<STATE_STRING>\\[^ntbf]                 { 
+                                            CHECK_STRING_OVERFLOW();
+                                            *string_buf_ptr++ = yytext[1];
+                                        }
 
-<STATE_STRING_ERROR>\"      {
-                                 BEGIN(INITIAL);
-	                        }
+<STATE_STRING>\\[n]                     { 
+                                            CHECK_STRING_OVERFLOW();
+                                            *string_buf_ptr++ = '\n';
+                                        }
 
-<STATE_STRING_ERROR>\\\n    {
-                                curr_lineno++;
-                                BEGIN(INITIAL);
-                            }
-<STATE_STRING_ERROR>\n      {
-                                curr_lineno++;
-                                BEGIN(INITIAL);
-	                        }
+<STATE_STRING>\\[t]                     { 
+                                            CHECK_STRING_OVERFLOW();
+                                            *string_buf_ptr++ = '\t';
+                                        }
 
-<STATE_STRING>\\0           {
-                                cool_yylval.error_msg = "String contains null character";
-                                BEGIN(STATE_STRING_ERROR);
-                                return ERROR;
-                            }
+<STATE_STRING>\\[b]                     { 
+                                            CHECK_STRING_OVERFLOW();
+                                            *string_buf_ptr++ = '\b';
+                                        }
 
-<STATE_STRING_ERROR>.       {}      
+<STATE_STRING>\\[f]                      { 
+                                            CHECK_STRING_OVERFLOW();
+                                            *string_buf_ptr++ = '\f';
+                                        }
+
+<STATE_STRING>.                         { 
+                                            CHECK_STRING_OVERFLOW();
+                                            *string_buf_ptr++ = *yytext;  
+                                        }
+
+
+
+<STATE_STRING_ERROR>\"                  {
+                                            BEGIN(INITIAL);
+	                                    }
+
+<STATE_STRING_ERROR>\\\n                {
+                                            curr_lineno++;
+                                            BEGIN(INITIAL);
+                                        }
+
+<STATE_STRING_ERROR>\n                  {
+                                            curr_lineno++;
+                                            BEGIN(INITIAL);
+	                                    }
+
+<STATE_STRING>\\0                       {
+                                            cool_yylval.error_msg = "String contains null character";
+                                            BEGIN(STATE_STRING_ERROR);
+                                            return ERROR;
+                                        }
+
+<STATE_STRING_ERROR>.                   {}      
 
 
 {NUMBER}+                               { 
@@ -206,76 +207,78 @@ WHITESPACE  [ \f\r\t\v]+
                                         }
 
 
-{FALSE} {
-    cool_yylval.boolean = false;
-    return BOOL_CONST;
-}
+{FALSE}                                 {
+                                            cool_yylval.boolean = false;
+                                            return BOOL_CONST;
+                                        }
 
 
-{TRUE} {
-    cool_yylval.boolean = true;
-    return BOOL_CONST;
-}
+{TRUE}                                  {
+                                            cool_yylval.boolean = true;
+                                            return BOOL_CONST;
+                                        }
+
+
+{DARROW}		                        {   return DARROW;   }
+{LE}                                    {   return LE;       }
+{ASSIGN}                                {   return ASSIGN;   }
+"+"                                     {   return '+';      }
+"/"                                     {   return '/';      }
+"-"                                     {   return '-';      }
+"*"                                     {   return '*';      }
+"="                                     {   return '=';      }
+"<"                                     {   return '<';      }
+"."                                     {   return '.';      }
+"~"                                     {   return '~';      }
+","                                     {   return ',';      }
+";"                                     {   return ';';      }
+":"                                     {   return ':';      }
+"("                                     {   return '(';      }
+")"                                     {   return ')';      }
+"@"                                     {   return '@';      }
+"{"                                     {   return '{';      }
+"}"                                     {   return '}';      }
+
+
+{CLASS}                                 {   return CLASS;    }
+{ELSE}                                  {   return ELSE;     }
+{FI}                                    {   return FI;       }
+{IF}                                    {   return IF;       }
+{IN}                                    {   return IN;       }
+{INHERITS}                              {   return INHERITS; }
+{LET}                                   {   return LET;      }
+{LOOP}                                  {   return LOOP;     }
+{POOL}                                  {   return POOL;     }
+{THEN}                                  {   return THEN;     }
+{WHILE}                                 {   return WHILE;    }
+{CASE}                                  {   return CASE;     }
+{ESAC}                                  {   return ESAC;     }
+{OF}                                    {   return OF;       }
+{NEW}                                   {   return NEW;      }
+{NOT}                                   {   return NOT;      }
+{ISVOID}                                {   return ISVOID;   }
 
 
 
-{DARROW}		{   return DARROW; }
-{LE}            {   return LE;     }
-{ASSIGN}        {   return ASSIGN; }
-"+"             {   return '+';    }
-"/"             {   return '/';    }
-"-"             {   return '-';    }
-"*"             {   return '*';    }
-"="             {   return '=';    }
-"<"             {   return '<';    }
-"."             {   return '.';    }
-"~"             {   return '~';    }
-","             {   return ',';    }
-";"             {   return ';';    }
-":"             {   return ':';    }
-"("             {   return '(';    }
-")"             {   return ')';    }
-"@"             {   return '@';    }
-"{"             {   return '{';    }
-"}"             {   return '}';    }
 
+{TYPEID}                                {
+                                            cool_yylval.symbol = stringtable.add_string(yytext);
+                                            return (TYPEID);
+                                        }
+                                        
+{OBJECTID}                              {
+                                            cool_yylval.symbol = stringtable.add_string(yytext);
+                                            return (OBJECTID);
+                                        }
 
-{CLASS}       { return CLASS; }
-{ELSE}        { return ELSE; }
-{FI}          { return FI; }
-{IF}          { return IF; }
-{IN}          { return IN; }
-{INHERITS}    { return INHERITS; }
-{LET}         { return LET; }
-{LOOP}        { return LOOP; }
-{POOL}        { return POOL; }
-{THEN}        { return THEN; }
-{WHILE}       { return WHILE; }
-{CASE}        { return CASE; }
-{ESAC}        { return ESAC; }
-{OF}          { return OF; }
-{NEW}         { return NEW; }
-{NOT}         { return NOT; }
-{ISVOID}      { return ISVOID; }
+{WHITESPACE}                            {}        
 
+\n                                      {   curr_lineno++; }
 
-
-
-{TYPEID}        {
-                    cool_yylval.symbol = stringtable.add_string(yytext);
-                    return (TYPEID);
-	            }
-{OBJECTID}      {
-                    cool_yylval.symbol = stringtable.add_string(yytext);
-                    return (OBJECTID);
-	            }
-
-{WHITESPACE}    {}        
-\n              {   curr_lineno++; }
-.               { 
-                    cool_yylval.error_msg = yytext;
-                    return ERROR;  
-                }
+.                                       { 
+                                            cool_yylval.error_msg = yytext;
+                                            return ERROR;  
+                                        }
 
 %%
 
